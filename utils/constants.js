@@ -27,3 +27,4 @@ export const initialTodos = [
     inputErrorClass: "popup__input_type_error",
     inactiveButtonClass: "button_disabled",
   };
+
