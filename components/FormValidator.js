@@ -9,24 +9,24 @@ class FormValidator {
   }
 
   _showInputError(inputElement) {
-    this._errorElementId = `#${inputElement.id}-error`;
-    this._errorElement = this._formEl.querySelector(this._errorElementId);
+    const errorElementId = `#${inputElement.id}-error`;
+    const errorElement = this._formEl.querySelector(errorElementId);
     inputElement.classList.add(this._inputErrorClass);
-    this._errorElement.textContent = inputElement.validationMessage;
-    this._errorElement.classList.add(this._errorClass);
+    errorElement.textContent = inputElement.validationMessage;
+    errorElement.classList.add(this._errorClass);
   }
 
   _hideInputError(inputElement) {
-    this._errorElementId = `#${inputElement.id}-error`;
-    this._errorElement = this._formEl.querySelector(this._errorElementId);
+    const errorElementId = `#${inputElement.id}-error`;
+    const errorElement = this._formEl.querySelector(errorElementId);
     inputElement.classList.remove(this._inputErrorClass);
-    this._errorElement.classList.remove(this._errorClass);
-    this._errorElement.textContent = "";
+    errorElement.classList.remove(this._errorClass);
+    errorElement.textContent = "";
   }
 
   _checkInputValidity(inputElement) {
     if (!inputElement.validity.valid) {
-      this._showInputError(inputElement, inputElement.validationMessage);
+      this._showInputError(inputElement);
     } else {
       this._hideInputError(inputElement);
     }
@@ -38,13 +38,21 @@ class FormValidator {
     });
   }
 
+  _disableSubmitBtn() {
+    this._buttonElement.classList.add(this._inactiveButtonClass);
+    this._buttonElement.disabled = true;
+  }
+
+  _enableSubmitBtn() {
+    this._buttonElement.classList.remove(this._inactiveButtonClass);
+    this._buttonElement.disabled = false;
+  }
+
   _toggleButtonState() {
-    if (this._hasInvalidInput(this._inputList)) {
-      this._buttonElement.classList.add(this._inactiveButtonClass);
-      this._buttonElement.disabled = true;
+    if (this._hasInvalidInput()) {
+      this._disableSubmitBtn();
     } else {
-      this._buttonElement.classList.remove(this._inactiveButtonClass);
-      this._buttonElement.disabled = false;
+      this._enableSubmitBtn();
     }
   }
 
@@ -66,16 +74,17 @@ class FormValidator {
     });
   }
 
-  resetValidation() {
-    this._formEl.reset();
-    this._toggleButtonState();
-  }
-
   enableValidation() {
     this._formEl.addEventListener("submit", (evt) => {
       evt.preventDefault();
+      this.resetValidation();
     });
     this._setEventListeners();
+  }
+
+  resetValidation() {
+    this._formEl.reset();
+    this._toggleButtonState();
   }
 }
 
